@@ -75,7 +75,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_share1"
-            app:tint="@color/black"
+            app:tint="@color/yp_gray"
             android:contentDescription="@null"/>
     </LinearLayout>
 
@@ -100,7 +100,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_support1"
-            app:tint="@color/black"
+            app:tint="@color/yp_gray"
             android:contentDescription="@null"/>
     </LinearLayout>
 
@@ -125,7 +125,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_agreement1"
-            app:tint="@color/black"
+            app:tint="@color/yp_gray"
             android:contentDescription="@null"/>
     </LinearLayout>
 
