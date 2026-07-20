@@ -14,14 +14,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="12dp"
+        android:baselineAligned="true"
+        android:layout_marginTop="0dp"
         android:layout_marginBottom="24dp">
 
         <ImageView
             android:id="@+id/btnBack"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_back"
+            android:src="@drawable/ic_back1"
+            android:layout_gravity="center_vertical"
             app:tint="@color/black"
             android:contentDescription="@null"/>
 
@@ -32,6 +34,8 @@
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
+            android:includeFontPadding="false"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="24dp"/>
     </LinearLayout>
     <LinearLayout
