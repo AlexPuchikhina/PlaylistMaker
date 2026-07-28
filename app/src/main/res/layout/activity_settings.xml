@@ -44,7 +44,7 @@
 
         <TextView
             style="@style/SettingsItemTextStyle"
-            android:text="Тёмная тема" />
+            android:text="@string/theme_dark" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switchTheme"
@@ -58,7 +58,7 @@
 
         <TextView
             style="@style/SettingsItemTextStyle"
-            android:text="Поделиться приложением" />
+            android:text="@string/share_app" />
 
         <ImageView
             style="@style/SettingsItemIconStyle"
@@ -71,7 +71,7 @@
 
         <TextView
             style="@style/SettingsItemTextStyle"
-            android:text="Написать в поддержку" />
+            android:text="@string/support_write" />
 
         <ImageView
             style="@style/SettingsItemIconStyle"
@@ -84,7 +84,7 @@
 
         <TextView
             style="@style/SettingsItemTextStyle"
-            android:text="Пользовательское соглашение" />
+            android:text="@string/user_agreement" />
 
         <ImageView
             style="@style/SettingsItemIconStyle"

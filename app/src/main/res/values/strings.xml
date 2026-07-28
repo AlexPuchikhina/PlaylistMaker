@@ -9,4 +9,9 @@
     <string name="share_app">Поделиться приложением</string>
     <string name="support_write">Написать в поддержку</string>
     <string name="user_agreement">Пользовательское соглашение</string>
+    <string name="share_app_message">Учись Android-разработке в Яндекс Практикуме: https://practicum.yandex.ru/profile/android-developer/?from=learn_subscriptions-with-prof-recommendations</string>
+    <string name="user_agreement_link">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="support_email">alexandrapuchihina@yandex.ru</string>
+    <string name="support_email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="support_email_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
 </resources>
