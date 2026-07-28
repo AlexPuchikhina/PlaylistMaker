@@ -14,4 +14,6 @@
     <string name="support_email">alexandrapuchihina@yandex.ru</string>
     <string name="support_email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="support_email_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="header_search">Поиск</string>
+    <string name="search_hint">Поиск</string>
 </resources>
