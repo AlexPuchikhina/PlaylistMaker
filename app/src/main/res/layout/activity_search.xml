@@ -50,31 +50,40 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:src="@drawable/ic_search"
-            app:tint="@color/yp_gray"
+            app:tint="?attr/yp_search_hint_color"
             android:contentDescription="@null"/>
 
-        <EditText
-            android:id="@+id/etSearch"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:background="@null"
-            android:hint="@string/search_hint"
-            android:textColorHint="@color/yp_gray"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="16sp"
-            android:maxLines="1"
-            android:inputType="text"
-            android:imeOptions="actionDone"/>
+            android:layout_marginStart="8dp">
 
-        <ImageView
-            android:id="@+id/btnClearSearch"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_clear_16"
-            android:visibility="gone"
-            android:contentDescription="@null"/>
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingEnd="24dp"
+                android:background="@null"
+                android:hint="@string/search_hint"
+                android:textColorHint="?attr/yp_search_hint_color"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:maxLines="1"
+                android:inputType="text"
+                android:imeOptions="actionDone"/>
+
+            <ImageView
+                android:id="@+id/btnClearSearch"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/ic_clear_16"
+                app:tint="?attr/yp_search_hint_color"
+                android:visibility="gone"
+                android:contentDescription="@null"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 
