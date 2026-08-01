@@ -2,18 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MainScreenRootStyle"
     android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical"
-    android:background="@color/yp_blue"
-    android:padding="16dp">
+    tools:context=".MainActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/header_main"
+        android:text="Playlist maker"
         android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -22,67 +18,20 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSearch"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="16dp"
+        style="@style/MainButtonStyle"
         android:text="@string/button_search"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        android:textAllCaps="false"
-        app:backgroundTint="@color/white"
-        app:cornerRadius="16dp"
-        android:letterSpacing="0"
-        app:icon="@drawable/ic_search"
-        android:insetBottom="0dp"
-        android:insetRight="0dp"
-        android:insetLeft="0dp"
-        android:insetTop="0dp"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="@color/black"/>
+        app:icon="@drawable/ic_search" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnMedia"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="16dp"
+        style="@style/MainButtonStyle"
         android:text="@string/button_media"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        android:textAllCaps="false"
-        app:backgroundTint="@color/white"
-        app:cornerRadius="16dp"
-        android:letterSpacing="0"
-        app:icon="@drawable/ic_media"
-        android:insetBottom="0dp"
-        android:insetRight="0dp"
-        android:insetLeft="0dp"
-        android:insetTop="0dp"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="@color/black"/>
+        app:icon="@drawable/ic_media" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSettings"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        style="@style/MainButtonStyle"
         android:text="@string/button_settings"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        android:textAllCaps="false"
-        app:backgroundTint="@color/white"
-        app:cornerRadius="16dp"
-        android:letterSpacing="0"
-        app:icon="@drawable/ic_settings"
-        android:insetBottom="0dp"
-        android:insetRight="0dp"
-        android:insetLeft="0dp"
-        android:insetTop="0dp"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="@color/black"/>
+        app:icon="@drawable/ic_settings" />
 
 </LinearLayout>

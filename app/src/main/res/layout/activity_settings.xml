@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings_root"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="?attr/colorSurface"
     android:padding="16dp">
 
     <LinearLayout
@@ -24,14 +24,14 @@
             android:layout_height="24dp"
             android:src="@drawable/ic_back1"
             android:layout_gravity="center_vertical"
-            app:tint="@color/black"
+            app:tint="?attr/colorOnSurface"
             android:contentDescription="@null"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/header_settings"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="22sp"
             android:textStyle="bold"
             android:includeFontPadding="false"
@@ -39,18 +39,12 @@
             android:layout_marginStart="24dp"/>
     </LinearLayout>
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:id="@+id/themeSwitchRow"
+        style="@style/SettingsItemStyle">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/theme_dark"
-            android:textColor="@color/black"
-            android:textSize="16sp"/>
+            style="@style/SettingsItemTextStyle"
+            android:text="@string/theme_dark" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switchTheme"
@@ -60,77 +54,41 @@
 
     <LinearLayout
         android:id="@+id/btnShare"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:clickable="true"
-        android:focusable="true">
+        style="@style/SettingsItemStyle">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/share_app"
-            android:textColor="@color/black"
-            android:textSize="16sp"/>
+            style="@style/SettingsItemTextStyle"
+            android:text="@string/share_app" />
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_share1"
-            app:tint="@color/yp_gray"
-            android:contentDescription="@null"/>
+            style="@style/SettingsItemIconStyle"
+            android:src="@drawable/ic_share1" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/btnSupport"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:clickable="true"
-        android:focusable="true">
+        style="@style/SettingsItemStyle">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/support_write"
-            android:textColor="@color/black"
-            android:textSize="16sp"/>
+            style="@style/SettingsItemTextStyle"
+            android:text="@string/support_write" />
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_support1"
-            app:tint="@color/yp_gray"
-            android:contentDescription="@null"/>
+            style="@style/SettingsItemIconStyle"
+            android:src="@drawable/ic_support1" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/btnAgreement"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:clickable="true"
-        android:focusable="true">
+        style="@style/SettingsItemStyle">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/user_agreement"
-            android:textColor="@color/black"
-            android:textSize="16sp"/>
+            style="@style/SettingsItemTextStyle"
+            android:text="@string/user_agreement" />
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_agreement1"
-            app:tint="@color/yp_gray"
-            android:contentDescription="@null"/>
+            style="@style/SettingsItemIconStyle"
+            android:src="@drawable/ic_agreement1" />
     </LinearLayout>
 
 </LinearLayout>
