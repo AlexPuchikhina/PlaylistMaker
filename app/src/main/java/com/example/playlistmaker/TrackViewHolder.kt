@@ -11,15 +11,13 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val ivArtwork: ImageView = itemView.findViewById(R.id.ivArtwork)
     private val tvTrackName: TextView = itemView.findViewById(R.id.tvTrackName)
-    private val tvArtistAndTime: TextView = itemView.findViewById(R.id.tvArtistAndTime)
+    private val tvArtistName: TextView = itemView.findViewById(R.id.tvArtistName)
+    private val tvTrackTime: TextView = itemView.findViewById(R.id.tvTrackTime)
 
     fun bind(track: Track) {
         tvTrackName.text = track.trackName
-        tvArtistAndTime.text = itemView.context.getString(
-            R.string.track_artist_and_time,
-            track.artistName,
-            track.trackTime
-        )
+        tvArtistName.text = track.artistName
+        tvTrackTime.text = itemView.context.getString(R.string.track_time_prefix, track.trackTime)
 
         val cornerRadiusPx = itemView.resources.getDimensionPixelSize(R.dimen.track_artwork_corner_radius)
 
