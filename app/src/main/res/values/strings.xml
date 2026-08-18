@@ -16,4 +16,5 @@
     <string name="support_email_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="header_search">Поиск</string>
     <string name="search_hint">Поиск</string>
+    <string name="track_time_prefix">• %1$s</string>
 </resources>
