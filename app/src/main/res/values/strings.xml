@@ -17,4 +17,8 @@
     <string name="header_search">Поиск</string>
     <string name="search_hint">Поиск</string>
     <string name="track_time_prefix">• %1$s</string>
+    <string name="placeholder_nothing_found_title">Ничего не нашлось</string>
+    <string name="placeholder_no_connection_title">Проблемы со связью</string>
+    <string name="placeholder_no_connection_message">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="button_refresh">Обновить</string>
 </resources>
