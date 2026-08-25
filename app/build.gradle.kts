@@ -39,6 +39,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
     implementation(libs.glide)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
     testImplementation(libs.junit)
