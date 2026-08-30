@@ -32,7 +32,13 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var tvPlaceholderMessage: TextView
     private lateinit var btnRefresh: Button
 
+    private lateinit var historyContainer: LinearLayout
+    private lateinit var rvHistory: RecyclerView
+    private lateinit var btnClearHistory: Button
+
     private lateinit var adapter: TrackAdapter
+    private lateinit var historyAdapter: TrackAdapter
+    private lateinit var searchHistory: SearchHistory
 
     private var searchText: String = ""
     private var lastSearchQuery: String? = null
@@ -41,6 +47,9 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        val app = applicationContext as App
+        searchHistory = SearchHistory(app.sharedPreferences)
 
         val btnBack = findViewById<ImageView>(R.id.btnBack)
         btnBack.setOnClickListener {
@@ -56,9 +65,17 @@ class SearchActivity : AppCompatActivity() {
         tvPlaceholderMessage = findViewById(R.id.tvPlaceholderMessage)
         btnRefresh = findViewById(R.id.btnRefresh)
 
-        adapter = TrackAdapter()
+        historyContainer = findViewById(R.id.historyContainer)
+        rvHistory = findViewById(R.id.rvHistory)
+        btnClearHistory = findViewById(R.id.btnClearHistory)
+
+        adapter = TrackAdapter(onTrackClick = { track -> onTrackClicked(track) })
         rvTracks.layoutManager = LinearLayoutManager(this)
         rvTracks.adapter = adapter
+
+        historyAdapter = TrackAdapter(onTrackClick = { track -> onTrackClicked(track) })
+        rvHistory.layoutManager = LinearLayoutManager(this)
+        rvHistory.adapter = historyAdapter
 
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -71,8 +88,13 @@ class SearchActivity : AppCompatActivity() {
                 if (s.isNullOrEmpty()) {
                     clearSearchResults()
                 }
+                updateHistoryVisibility()
             }
         })
+
+        etSearch.setOnFocusChangeListener { _, _ ->
+            updateHistoryVisibility()
+        }
 
         etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -96,9 +118,32 @@ class SearchActivity : AppCompatActivity() {
         btnRefresh.setOnClickListener {
             lastSearchQuery?.let { query -> performSearch(query) }
         }
+
+        btnClearHistory.setOnClickListener {
+            searchHistory.clearHistory()
+            updateHistoryVisibility()
+        }
+    }
+
+    private fun onTrackClicked(track: Track) {
+        searchHistory.addTrack(track)
+    }
+
+    private fun updateHistoryVisibility() {
+        val history = searchHistory.getHistory()
+        val shouldShowHistory = etSearch.hasFocus() && etSearch.text.isEmpty() && history.isNotEmpty()
+        if (shouldShowHistory) {
+            historyAdapter.updateTracks(history)
+            rvTracks.visibility = View.GONE
+            placeholderContainer.visibility = View.GONE
+            historyContainer.visibility = View.VISIBLE
+        } else {
+            historyContainer.visibility = View.GONE
+        }
     }
 
     private fun performSearch(query: String) {
+        historyContainer.visibility = View.GONE
         searchCall?.cancel()
         lastSearchQuery = query
 

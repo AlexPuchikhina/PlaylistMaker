@@ -21,4 +21,6 @@
     <string name="placeholder_no_connection_title">Проблемы со связью</string>
     <string name="placeholder_no_connection_message">Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="button_refresh">Обновить</string>
+    <string name="search_history_title">Вы искали</string>
+    <string name="search_history_clear">Очистить историю</string>
 </resources>
