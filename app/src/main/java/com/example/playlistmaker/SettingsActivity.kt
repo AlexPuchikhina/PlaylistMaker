@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import android.content.Intent
 import android.widget.LinearLayout
 import android.net.Uri
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,14 +20,11 @@ class SettingsActivity : AppCompatActivity() {
         btnBack.setOnClickListener {
             finish()
         }
-        val themeSwitch = findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchTheme)
-        themeSwitch.isChecked = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
-        themeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
-                androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO)
-            }
+        val app = applicationContext as App
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.switchTheme)
+        themeSwitcher.isChecked = app.darkTheme
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            app.switchTheme(checked)
         }
         val btnShare = findViewById<LinearLayout>(R.id.btnShare)
         btnShare.setOnClickListener {

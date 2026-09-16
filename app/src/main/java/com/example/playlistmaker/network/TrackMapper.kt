@@ -7,6 +7,7 @@ import java.util.Locale
 fun TrackDto.toTrack(): Track {
     val timeFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
     return Track(
+        trackId = trackId,
         trackName = trackName.orEmpty(),
         artistName = artistName.orEmpty(),
         trackTime = timeFormat.format(trackTimeMillis ?: 0L),
