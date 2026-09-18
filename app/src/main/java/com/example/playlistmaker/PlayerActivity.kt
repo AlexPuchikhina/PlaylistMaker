@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -12,9 +13,13 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player)
+        val trackJson = intent.getStringExtra(TRACK_KEY)
+        if (trackJson == null) {
+            finish()
+            return
+        }
 
-        val trackJson = intent.getStringExtra(TRACK_KEY) ?: return
+        setContentView(R.layout.activity_player)
         val track = Gson().fromJson(trackJson, Track::class.java)
 
         val btnBack = findViewById<ImageView>(R.id.btnBack)
@@ -33,16 +38,16 @@ class PlayerActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvArtistName).text = track.artistName
         findViewById<TextView>(R.id.tvDurationValue).text = track.trackTime
 
-        val rowAlbum = findViewById<android.view.View>(R.id.rowAlbum)
+        val rowAlbum = findViewById<View>(R.id.rowAlbum)
         if (track.collectionName.isNullOrEmpty()) {
-            rowAlbum.visibility = android.view.View.GONE
+            rowAlbum.visibility = View.GONE
         } else {
             findViewById<TextView>(R.id.tvAlbumValue).text = track.collectionName
         }
 
-        val rowYear = findViewById<android.view.View>(R.id.rowYear)
+        val rowYear = findViewById<View>(R.id.rowYear)
         if (track.releaseDate.isNullOrEmpty()) {
-            rowYear.visibility = android.view.View.GONE
+            rowYear.visibility = View.GONE
         } else {
             findViewById<TextView>(R.id.tvYearValue).text = track.releaseDate
         }

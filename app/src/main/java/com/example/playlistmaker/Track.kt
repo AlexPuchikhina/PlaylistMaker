@@ -1,7 +1,7 @@
 package com.example.playlistmaker
 
 data class Track(
-    val trackId: Int,
+    val trackId: Long,
     val trackName: String,
     val artistName: String,
     val trackTime: String,
