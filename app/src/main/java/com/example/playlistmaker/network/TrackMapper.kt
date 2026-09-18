@@ -11,6 +11,10 @@ fun TrackDto.toTrack(): Track {
         trackName = trackName.orEmpty(),
         artistName = artistName.orEmpty(),
         trackTime = timeFormat.format(trackTimeMillis ?: 0L),
-        artworkUrl100 = artworkUrl100
+        artworkUrl100 = artworkUrl100,
+        collectionName = collectionName,
+        releaseDate = releaseDate?.take(4),
+        primaryGenreName = primaryGenreName,
+        country = country
     )
 }

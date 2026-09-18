@@ -2,9 +2,11 @@
     <!-- Base application theme. -->
     <attr name="yp_main_background" format="color" />
     <attr name="yp_search_hint_color" format="color" />
+    <attr name="yp_button_overlay" format="color" />
     <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="yp_main_background">@color/yp_blue</item>
         <item name="yp_search_hint_color">@color/yp_gray</item>
+        <item name="yp_button_overlay">@color/button_overlay_light</item>
         <item name="colorPrimary">@color/yp_blue</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/yp_gray</item>

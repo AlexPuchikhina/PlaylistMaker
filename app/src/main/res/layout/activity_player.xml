@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    tools:context=".PlayerActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_back1"
+            app:tint="?attr/colorOnSurface"
+            android:contentDescription="@null"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivCover"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_track_placeholder"
+            android:contentDescription="@null"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnBack" />
+
+        <TextView
+            android:id="@+id/tvTrackName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="19sp"
+            android:textColor="?attr/colorOnSurface"
+            android:fontFamily="@font/ys_display_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivCover" />
+
+        <TextView
+            android:id="@+id/tvArtistName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:textColor="?attr/colorOnSurface"
+            android:fontFamily="@font/ys_display_regular"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTrackName" />
+
+        <ImageButton
+            android:id="@+id/btnAddToPlaylist"
+            android:layout_width="51dp"
+            android:layout_height="51dp"
+            android:padding="13dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_button_round"
+            android:src="@drawable/ic_add_playlist_23x23"
+            android:contentDescription="@null"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnPlay"
+            app:layout_constraintTop_toBottomOf="@id/tvArtistName" />
+
+        <ImageButton
+            android:id="@+id/btnPlay"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:src="@drawable/ic_play_100x100"
+            app:tint="?attr/colorOnSurface"
+            android:background="@null"
+            android:contentDescription="@null"
+            app:layout_constraintStart_toEndOf="@id/btnAddToPlaylist"
+            app:layout_constraintEnd_toStartOf="@id/btnFavorite"
+            app:layout_constraintTop_toTopOf="@id/btnAddToPlaylist"
+            app:layout_constraintBottom_toBottomOf="@id/btnAddToPlaylist" />
+
+        <ImageButton
+            android:id="@+id/btnFavorite"
+            android:layout_width="51dp"
+            android:layout_height="51dp"
+            android:padding="13dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_button_round"
+            android:src="@drawable/ic_favorite_25x23"
+            android:contentDescription="@null"
+            app:layout_constraintStart_toEndOf="@id/btnPlay"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btnAddToPlaylist"
+            app:layout_constraintBottom_toBottomOf="@id/btnAddToPlaylist" />
+
+        <TextView
+            android:id="@+id/tvProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/player_progress_default"
+            android:textSize="13sp"
+            android:textColor="?attr/colorOnSurface"
+            android:fontFamily="@font/ys_display_regular"
+            app:layout_constraintStart_toStartOf="@id/btnPlay"
+            app:layout_constraintEnd_toEndOf="@id/btnPlay"
+            app:layout_constraintTop_toBottomOf="@id/btnPlay" />
+
+        <LinearLayout
+            android:id="@+id/rowDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvProgress">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/player_duration"
+                android:textSize="13sp"
+                android:textColor="@color/yp_gray"
+                android:fontFamily="@font/ys_display_regular" />
+
+            <TextView
+                android:id="@+id/tvDurationValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textSize="13sp"
+                android:textColor="?attr/colorOnSurface"
+                android:fontFamily="@font/ys_display_regular" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rowAlbum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rowDuration">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/player_album"
+                android:textSize="13sp"
+                android:textColor="@color/yp_gray"
+                android:fontFamily="@font/ys_display_regular" />
+
+            <TextView
+                android:id="@+id/tvAlbumValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:textSize="13sp"
+                android:textColor="?attr/colorOnSurface"
+                android:fontFamily="@font/ys_display_regular" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rowYear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rowAlbum">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/player_year"
+                android:textSize="13sp"
+                android:textColor="@color/yp_gray"
+                android:fontFamily="@font/ys_display_regular" />
+
+            <TextView
+                android:id="@+id/tvYearValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textSize="13sp"
+                android:textColor="?attr/colorOnSurface"
+                android:fontFamily="@font/ys_display_regular" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rowGenre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rowYear">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/player_genre"
+                android:textSize="13sp"
+                android:textColor="@color/yp_gray"
+                android:fontFamily="@font/ys_display_regular" />
+
+            <TextView
+                android:id="@+id/tvGenreValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textSize="13sp"
+                android:textColor="?attr/colorOnSurface"
+                android:fontFamily="@font/ys_display_regular" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rowCountry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rowGenre"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/player_country"
+                android:textSize="13sp"
+                android:textColor="@color/yp_gray"
+                android:fontFamily="@font/ys_display_regular" />
+
+            <TextView
+                android:id="@+id/tvCountryValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textSize="13sp"
+                android:textColor="?attr/colorOnSurface"
+                android:fontFamily="@font/ys_display_regular" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
