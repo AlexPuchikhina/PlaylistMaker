@@ -34,6 +34,9 @@
             android:name=".MediaActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".PlayerActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

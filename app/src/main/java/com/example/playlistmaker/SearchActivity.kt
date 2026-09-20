@@ -20,6 +20,8 @@ import com.example.playlistmaker.network.toTrack
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.content.Intent
+import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
 
@@ -127,6 +129,10 @@ class SearchActivity : AppCompatActivity() {
 
     private fun onTrackClicked(track: Track) {
         searchHistory.addTrack(track)
+
+        val intent = Intent(this, PlayerActivity::class.java)
+        intent.putExtra(PlayerActivity.TRACK_KEY, Gson().toJson(track))
+        startActivity(intent)
     }
 
     private fun updateHistoryVisibility() {
