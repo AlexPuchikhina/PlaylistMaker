@@ -98,6 +98,15 @@
             android:layout_height="match_parent"
             android:clipToPadding="false" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="140dp"
+            android:indeterminateTint="@color/yp_blue"
+            android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/placeholderContainer"
             android:layout_width="match_parent"

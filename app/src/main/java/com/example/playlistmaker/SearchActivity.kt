@@ -21,6 +21,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
+import android.widget.ProgressBar
 import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
@@ -34,6 +37,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var tvPlaceholderMessage: TextView
     private lateinit var btnRefresh: Button
 
+    private lateinit var progressBar: ProgressBar
+
     private lateinit var historyContainer: LinearLayout
     private lateinit var rvHistory: RecyclerView
     private lateinit var btnClearHistory: Button
@@ -45,6 +50,15 @@ class SearchActivity : AppCompatActivity() {
     private var searchText: String = ""
     private var lastSearchQuery: String? = null
     private var searchCall: Call<TracksSearchResponse>? = null
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable {
+        val query = searchText.trim()
+        if (query.isNotEmpty()) {
+            performSearch(query)
+        }
+    }
+    private var isClickAllowed = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +80,7 @@ class SearchActivity : AppCompatActivity() {
         tvPlaceholderTitle = findViewById(R.id.tvPlaceholderTitle)
         tvPlaceholderMessage = findViewById(R.id.tvPlaceholderMessage)
         btnRefresh = findViewById(R.id.btnRefresh)
+        progressBar = findViewById(R.id.progressBar)
 
         historyContainer = findViewById(R.id.historyContainer)
         rvHistory = findViewById(R.id.rvHistory)
@@ -89,6 +104,8 @@ class SearchActivity : AppCompatActivity() {
                 btnClearSearch.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
                 if (s.isNullOrEmpty()) {
                     clearSearchResults()
+                } else {
+                    searchDebounce()
                 }
                 updateHistoryVisibility()
             }
@@ -102,6 +119,7 @@ class SearchActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val query = etSearch.text.toString().trim()
                 if (query.isNotEmpty()) {
+                    handler.removeCallbacks(searchRunnable)
                     performSearch(query)
                 }
                 true
@@ -127,7 +145,27 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        searchCall?.cancel()
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MS)
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MS)
+        }
+        return current
+    }
     private fun onTrackClicked(track: Track) {
+        if (!clickDebounce()) return
         searchHistory.addTrack(track)
 
         val intent = Intent(this, PlayerActivity::class.java)
@@ -152,6 +190,9 @@ class SearchActivity : AppCompatActivity() {
         historyContainer.visibility = View.GONE
         searchCall?.cancel()
         lastSearchQuery = query
+        rvTracks.visibility = View.GONE
+        placeholderContainer.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
 
         val call = RetrofitClient.iTunesApiService.search(query)
         searchCall = call
@@ -160,6 +201,7 @@ class SearchActivity : AppCompatActivity() {
                 call: Call<TracksSearchResponse>,
                 response: Response<TracksSearchResponse>
             ) {
+                progressBar.visibility = View.GONE
                 if (response.isSuccessful) {
                     val tracks = response.body()?.results.orEmpty().map { it.toTrack() }
                     if (tracks.isEmpty()) {
@@ -174,6 +216,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
                 if (call.isCanceled) return
+                progressBar.visibility = View.GONE
                 showErrorState()
             }
         })
@@ -207,8 +250,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearSearchResults() {
+        handler.removeCallbacks(searchRunnable)
         searchCall?.cancel()
         lastSearchQuery = null
+        progressBar.visibility = View.GONE
         rvTracks.visibility = View.GONE
         placeholderContainer.visibility = View.GONE
         adapter.updateTracks(emptyList())
@@ -225,7 +270,9 @@ class SearchActivity : AppCompatActivity() {
         etSearch.setText(searchText)
     }
 
-    companion object {
-        private const val SEARCH_TEXT_KEY = "SEARCH_TEXT_KEY"
+        companion object {
+            private const val SEARCH_TEXT_KEY = "SEARCH_TEXT_KEY"
+            private const val SEARCH_DEBOUNCE_DELAY_MS = 2000L
+            private const val CLICK_DEBOUNCE_DELAY_MS = 1000L
+        }
     }
-}
