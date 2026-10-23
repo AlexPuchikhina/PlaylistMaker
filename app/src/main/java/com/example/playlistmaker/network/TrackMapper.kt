@@ -15,6 +15,7 @@ fun TrackDto.toTrack(): Track {
         collectionName = collectionName,
         releaseDate = releaseDate?.take(4),
         primaryGenreName = primaryGenreName,
-        country = country
+        country = country,
+        previewUrl = previewUrl
     )
 }
