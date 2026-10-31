@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.player
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.domain.models.PlayerState
 import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
@@ -22,15 +23,14 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var btnPlay: ImageButton
     private lateinit var tvProgress: TextView
 
-    private val mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
+    private val playerInteractor = Creator.providePlayerInteractor()
 
     private val handler = Handler(Looper.getMainLooper())
     private val timeFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
     private val updateProgressRunnable = object : Runnable {
         override fun run() {
-            if (playerState == STATE_PLAYING) {
-                tvProgress.text = timeFormat.format(mediaPlayer.currentPosition)
+            if (playerInteractor.getPlayerState() == PlayerState.PLAYING) {
+                tvProgress.text = timeFormat.format(playerInteractor.getCurrentPosition())
                 handler.postDelayed(this, PROGRESS_UPDATE_DELAY_MS)
             }
         }
@@ -82,71 +82,50 @@ class PlayerActivity : AppCompatActivity() {
 
         btnPlay = findViewById(R.id.btnPlay)
         tvProgress = findViewById(R.id.tvProgress)
-        btnPlay.setOnClickListener { playbackControl() }
+        btnPlay.setOnClickListener { playerInteractor.playbackControl() }
 
-        preparePlayer(track.previewUrl)
+        render(PlayerState.DEFAULT)
+        val previewUrl = track.previewUrl
+        if (!previewUrl.isNullOrEmpty()) {
+            playerInteractor.preparePlayer(previewUrl) { state -> render(state) }
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        if (playerState == STATE_PLAYING) {
-            pausePlayer()
-        }
+        playerInteractor.pause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(updateProgressRunnable)
-        mediaPlayer.release()
+        playerInteractor.release()
     }
 
-    private fun preparePlayer(previewUrl: String?) {
-        btnPlay.isEnabled = false
-        if (previewUrl.isNullOrEmpty()) return
-
-        mediaPlayer.setDataSource(previewUrl)
-        mediaPlayer.setOnPreparedListener {
-            btnPlay.isEnabled = true
-            playerState = STATE_PREPARED
+    private fun render(state: PlayerState) {
+        when (state) {
+            PlayerState.DEFAULT -> {
+                btnPlay.isEnabled = false
+            }
+            PlayerState.PREPARED -> {
+                btnPlay.isEnabled = true
+                btnPlay.setImageResource(R.drawable.ic_play_100x100)
+                handler.removeCallbacks(updateProgressRunnable)
+                tvProgress.text = getString(R.string.player_progress_default)
+            }
+            PlayerState.PLAYING -> {
+                btnPlay.setImageResource(R.drawable.ic_pause_100x100)
+                handler.post(updateProgressRunnable)
+            }
+            PlayerState.PAUSED -> {
+                btnPlay.setImageResource(R.drawable.ic_play_100x100)
+                handler.removeCallbacks(updateProgressRunnable)
+            }
         }
-        mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
-            handler.removeCallbacks(updateProgressRunnable)
-            btnPlay.setImageResource(R.drawable.ic_play_100x100)
-            tvProgress.text = getString(R.string.player_progress_default)
-        }
-        mediaPlayer.prepareAsync()
-    }
-
-    private fun playbackControl() {
-        when (playerState) {
-            STATE_PLAYING -> pausePlayer()
-            STATE_PREPARED, STATE_PAUSED -> startPlayer()
-        }
-    }
-
-    private fun startPlayer() {
-        mediaPlayer.start()
-        playerState = STATE_PLAYING
-        btnPlay.setImageResource(R.drawable.ic_pause_100x100)
-        handler.post(updateProgressRunnable)
-    }
-
-    private fun pausePlayer() {
-        mediaPlayer.pause()
-        playerState = STATE_PAUSED
-        handler.removeCallbacks(updateProgressRunnable)
-        btnPlay.setImageResource(R.drawable.ic_play_100x100)
     }
 
     companion object {
         const val TRACK_KEY = "TRACK_KEY"
-
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-
         private const val PROGRESS_UPDATE_DELAY_MS = 300L
     }
 }
