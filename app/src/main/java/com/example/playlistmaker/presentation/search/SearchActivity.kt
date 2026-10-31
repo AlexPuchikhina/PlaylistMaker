@@ -1,6 +1,9 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.search
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -10,21 +13,23 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.network.RetrofitClient
-import com.example.playlistmaker.network.TracksSearchResponse
-import com.example.playlistmaker.network.toTrack
+import com.example.playlistmaker.App
+import com.example.playlistmaker.presentation.player.PlayerActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.data.dto.TracksSearchResponse
+import com.example.playlistmaker.data.mapper.toTrack
+import com.example.playlistmaker.data.network.RetrofitClient
+import com.example.playlistmaker.domain.models.Track
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.content.Intent
-import android.os.Handler
-import android.os.Looper
-import android.widget.ProgressBar
-import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
 

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.network
+package com.example.playlistmaker.data.dto
 
 data class TracksSearchResponse(
     val resultCount: Int?,

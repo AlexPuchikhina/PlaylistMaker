@@ -1,22 +1,20 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.settings
 
-import android.os.Bundle
-import android.view.View
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import android.content.Intent
-import android.widget.LinearLayout
 import android.net.Uri
+import android.os.Bundle
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.App
+import com.example.playlistmaker.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        val btnBack = findViewById<android.widget.ImageView>(R.id.btnBack)
+        val btnBack = findViewById<ImageView>(R.id.btnBack)
         btnBack.setOnClickListener {
             finish()
         }
@@ -46,7 +44,8 @@ class SettingsActivity : AppCompatActivity() {
         }
         val btnAgreement = findViewById<LinearLayout>(R.id.btnAgreement)
         btnAgreement.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_link)))
+            val intent =
+                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_link)))
             startActivity(intent)
         }
     }
