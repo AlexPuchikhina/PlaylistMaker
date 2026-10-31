@@ -18,11 +18,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.models.SearchResult
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
