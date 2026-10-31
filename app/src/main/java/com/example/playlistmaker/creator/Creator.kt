@@ -5,11 +5,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.repository.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.data.repository.SettingsRepositoryImpl
 import com.example.playlistmaker.data.repository.TracksRepositoryImpl
 import com.example.playlistmaker.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.domain.api.SettingsInteractor
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.api.TracksRepository
 import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
+import com.example.playlistmaker.domain.impl.SettingsInteractorImpl
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 import com.google.gson.Gson
 
@@ -40,5 +43,8 @@ object Creator {
         return SearchHistoryInteractorImpl(
             SearchHistoryRepositoryImpl(getSharedPreferences(), gson)
         )
+    }
+    fun provideSettingsInteractor(): SettingsInteractor {
+        return SettingsInteractorImpl(SettingsRepositoryImpl(getSharedPreferences()))
     }
 }

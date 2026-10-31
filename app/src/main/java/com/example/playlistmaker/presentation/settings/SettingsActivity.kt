@@ -8,9 +8,11 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
+import com.example.playlistmaker.creator.Creator
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+    private val settingsInteractor = Creator.provideSettingsInteractor()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -18,11 +20,11 @@ class SettingsActivity : AppCompatActivity() {
         btnBack.setOnClickListener {
             finish()
         }
-        val app = applicationContext as App
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.switchTheme)
-        themeSwitcher.isChecked = app.darkTheme
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            app.switchTheme(checked)
+        themeSwitcher.isChecked = settingsInteractor.isDarkThemeEnabled()
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            settingsInteractor.setDarkThemeEnabled(checked)
+            (applicationContext as App).switchTheme(checked)
         }
         val btnShare = findViewById<LinearLayout>(R.id.btnShare)
         btnShare.setOnClickListener {
