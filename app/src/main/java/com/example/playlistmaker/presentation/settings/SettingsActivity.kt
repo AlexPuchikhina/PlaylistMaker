@@ -1,30 +1,30 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.settings
 
-import android.os.Bundle
-import android.view.View
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import android.content.Intent
-import android.widget.LinearLayout
 import android.net.Uri
+import android.os.Bundle
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.App
+import com.example.playlistmaker.R
+import com.example.playlistmaker.creator.Creator
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+    private val settingsInteractor = Creator.provideSettingsInteractor()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        val btnBack = findViewById<android.widget.ImageView>(R.id.btnBack)
+        val btnBack = findViewById<ImageView>(R.id.btnBack)
         btnBack.setOnClickListener {
             finish()
         }
-        val app = applicationContext as App
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.switchTheme)
-        themeSwitcher.isChecked = app.darkTheme
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            app.switchTheme(checked)
+        themeSwitcher.isChecked = settingsInteractor.isDarkThemeEnabled()
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            settingsInteractor.setDarkThemeEnabled(checked)
+            (applicationContext as App).switchTheme(checked)
         }
         val btnShare = findViewById<LinearLayout>(R.id.btnShare)
         btnShare.setOnClickListener {
@@ -46,7 +46,8 @@ class SettingsActivity : AppCompatActivity() {
         }
         val btnAgreement = findViewById<LinearLayout>(R.id.btnAgreement)
         btnAgreement.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_link)))
+            val intent =
+                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_link)))
             startActivity(intent)
         }
     }

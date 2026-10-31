@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/MainScreenRootStyle"
     android:id="@+id/main"
-    tools:context=".MainActivity">
+    tools:context=".presentation.main.MainActivity">
 
     <TextView
         android:layout_width="match_parent"
