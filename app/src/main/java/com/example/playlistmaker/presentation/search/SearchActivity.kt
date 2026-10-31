@@ -18,10 +18,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.App
 import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.example.playlistmaker.R
-import com.example.playlistmaker.SearchHistory
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.models.SearchResult
 import com.example.playlistmaker.domain.models.Track
@@ -46,7 +44,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var adapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
-    private lateinit var searchHistory: SearchHistory
+    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
 
     private var searchText: String = ""
     private var lastSearchQuery: String? = null
@@ -64,9 +62,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        val app = applicationContext as App
-        searchHistory = SearchHistory(app.sharedPreferences)
 
         val btnBack = findViewById<ImageView>(R.id.btnBack)
         btnBack.setOnClickListener {
@@ -141,7 +136,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         btnClearHistory.setOnClickListener {
-            searchHistory.clearHistory()
+            searchHistoryInteractor.clearHistory()
             updateHistoryVisibility()
         }
     }
@@ -166,7 +161,7 @@ class SearchActivity : AppCompatActivity() {
     }
     private fun onTrackClicked(track: Track) {
         if (!clickDebounce()) return
-        searchHistory.addTrack(track)
+        searchHistoryInteractor.addTrack(track)
 
         val intent = Intent(this, PlayerActivity::class.java)
         intent.putExtra(PlayerActivity.TRACK_KEY, Gson().toJson(track))
@@ -174,7 +169,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun updateHistoryVisibility() {
-        val history = searchHistory.getHistory()
+        val history = searchHistoryInteractor.getHistory()
         val shouldShowHistory = etSearch.hasFocus() && etSearch.text.isEmpty() && history.isNotEmpty()
         if (shouldShowHistory) {
             historyAdapter.updateTracks(history)
