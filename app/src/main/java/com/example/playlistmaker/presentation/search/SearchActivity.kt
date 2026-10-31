@@ -22,14 +22,10 @@ import com.example.playlistmaker.App
 import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.SearchHistory
-import com.example.playlistmaker.data.dto.TracksSearchResponse
-import com.example.playlistmaker.data.mapper.toTrack
-import com.example.playlistmaker.data.network.RetrofitClient
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.domain.models.SearchResult
 import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
 
@@ -54,7 +50,7 @@ class SearchActivity : AppCompatActivity() {
 
     private var searchText: String = ""
     private var lastSearchQuery: String? = null
-    private var searchCall: Call<TracksSearchResponse>? = null
+    private val tracksInteractor = Creator.provideTracksInteractor()
 
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable {
@@ -153,7 +149,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
-        searchCall?.cancel()
     }
 
     private fun searchDebounce() {
@@ -193,38 +188,23 @@ class SearchActivity : AppCompatActivity() {
 
     private fun performSearch(query: String) {
         historyContainer.visibility = View.GONE
-        searchCall?.cancel()
         lastSearchQuery = query
         rvTracks.visibility = View.GONE
         placeholderContainer.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
 
-        val call = RetrofitClient.iTunesApiService.search(query)
-        searchCall = call
-        call.enqueue(object : Callback<TracksSearchResponse> {
-            override fun onResponse(
-                call: Call<TracksSearchResponse>,
-                response: Response<TracksSearchResponse>
-            ) {
+        tracksInteractor.searchTracks(query) { result ->
+            handler.post {
+                if (isDestroyed || query != lastSearchQuery) return@post
                 progressBar.visibility = View.GONE
-                if (response.isSuccessful) {
-                    val tracks = response.body()?.results.orEmpty().map { it.toTrack() }
-                    if (tracks.isEmpty()) {
-                        showEmptyState()
-                    } else {
-                        showContent(tracks)
+                when (result) {
+                    is SearchResult.Success -> {
+                        if (result.tracks.isEmpty()) showEmptyState() else showContent(result.tracks)
                     }
-                } else {
-                    showErrorState()
+                    SearchResult.Error -> showErrorState()
                 }
             }
-
-            override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
-                if (call.isCanceled) return
-                progressBar.visibility = View.GONE
-                showErrorState()
-            }
-        })
+        }
     }
 
     private fun showContent(tracks: List<Track>) {
@@ -256,7 +236,6 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clearSearchResults() {
         handler.removeCallbacks(searchRunnable)
-        searchCall?.cancel()
         lastSearchQuery = null
         progressBar.visibility = View.GONE
         rvTracks.visibility = View.GONE
