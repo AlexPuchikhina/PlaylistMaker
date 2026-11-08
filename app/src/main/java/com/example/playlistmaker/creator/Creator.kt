@@ -4,20 +4,20 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
-import com.example.playlistmaker.data.network.RetrofitNetworkClient
-import com.example.playlistmaker.data.player.PlayerRepositoryImpl
-import com.example.playlistmaker.data.repository.SearchHistoryRepositoryImpl
-import com.example.playlistmaker.data.repository.SettingsRepositoryImpl
-import com.example.playlistmaker.data.repository.TracksRepositoryImpl
-import com.example.playlistmaker.domain.api.PlayerInteractor
-import com.example.playlistmaker.domain.api.SearchHistoryInteractor
-import com.example.playlistmaker.domain.api.SettingsInteractor
-import com.example.playlistmaker.domain.api.TracksInteractor
-import com.example.playlistmaker.domain.api.TracksRepository
-import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
-import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
-import com.example.playlistmaker.domain.impl.SettingsInteractorImpl
-import com.example.playlistmaker.domain.impl.TracksInteractorImpl
+import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.player.data.PlayerRepositoryImpl
+import com.example.playlistmaker.search.data.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.settings.data.SettingsRepositoryImpl
+import com.example.playlistmaker.search.data.TracksRepositoryImpl
+import com.example.playlistmaker.player.domain.api.PlayerInteractor
+import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.settings.domain.api.SettingsInteractor
+import com.example.playlistmaker.search.domain.api.TracksInteractor
+import com.example.playlistmaker.search.domain.api.TracksRepository
+import com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
+import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
+import com.example.playlistmaker.settings.domain.impl.SettingsInteractorImpl
+import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
 import com.google.gson.Gson
 
 object Creator {
