@@ -1,6 +1,9 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.search
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -10,20 +13,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.network.RetrofitClient
-import com.example.playlistmaker.network.TracksSearchResponse
-import com.example.playlistmaker.network.toTrack
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import android.content.Intent
-import android.os.Handler
-import android.os.Looper
-import android.widget.ProgressBar
+import com.example.playlistmaker.R
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.domain.models.SearchResult
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.player.PlayerActivity
 import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
@@ -45,11 +44,11 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var adapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
-    private lateinit var searchHistory: SearchHistory
+    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
 
     private var searchText: String = ""
     private var lastSearchQuery: String? = null
-    private var searchCall: Call<TracksSearchResponse>? = null
+    private val tracksInteractor = Creator.provideTracksInteractor()
 
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable {
@@ -63,9 +62,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        val app = applicationContext as App
-        searchHistory = SearchHistory(app.sharedPreferences)
 
         val btnBack = findViewById<ImageView>(R.id.btnBack)
         btnBack.setOnClickListener {
@@ -140,7 +136,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         btnClearHistory.setOnClickListener {
-            searchHistory.clearHistory()
+            searchHistoryInteractor.clearHistory()
             updateHistoryVisibility()
         }
     }
@@ -148,7 +144,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
-        searchCall?.cancel()
     }
 
     private fun searchDebounce() {
@@ -166,7 +161,7 @@ class SearchActivity : AppCompatActivity() {
     }
     private fun onTrackClicked(track: Track) {
         if (!clickDebounce()) return
-        searchHistory.addTrack(track)
+        searchHistoryInteractor.addTrack(track)
 
         val intent = Intent(this, PlayerActivity::class.java)
         intent.putExtra(PlayerActivity.TRACK_KEY, Gson().toJson(track))
@@ -174,7 +169,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun updateHistoryVisibility() {
-        val history = searchHistory.getHistory()
+        val history = searchHistoryInteractor.getHistory()
         val shouldShowHistory = etSearch.hasFocus() && etSearch.text.isEmpty() && history.isNotEmpty()
         if (shouldShowHistory) {
             historyAdapter.updateTracks(history)
@@ -188,38 +183,23 @@ class SearchActivity : AppCompatActivity() {
 
     private fun performSearch(query: String) {
         historyContainer.visibility = View.GONE
-        searchCall?.cancel()
         lastSearchQuery = query
         rvTracks.visibility = View.GONE
         placeholderContainer.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
 
-        val call = RetrofitClient.iTunesApiService.search(query)
-        searchCall = call
-        call.enqueue(object : Callback<TracksSearchResponse> {
-            override fun onResponse(
-                call: Call<TracksSearchResponse>,
-                response: Response<TracksSearchResponse>
-            ) {
+        tracksInteractor.searchTracks(query) { result ->
+            handler.post {
+                if (isDestroyed || query != lastSearchQuery) return@post
                 progressBar.visibility = View.GONE
-                if (response.isSuccessful) {
-                    val tracks = response.body()?.results.orEmpty().map { it.toTrack() }
-                    if (tracks.isEmpty()) {
-                        showEmptyState()
-                    } else {
-                        showContent(tracks)
+                when (result) {
+                    is SearchResult.Success -> {
+                        if (result.tracks.isEmpty()) showEmptyState() else showContent(result.tracks)
                     }
-                } else {
-                    showErrorState()
+                    SearchResult.Error -> showErrorState()
                 }
             }
-
-            override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
-                if (call.isCanceled) return
-                progressBar.visibility = View.GONE
-                showErrorState()
-            }
-        })
+        }
     }
 
     private fun showContent(tracks: List<Track>) {
@@ -251,7 +231,6 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clearSearchResults() {
         handler.removeCallbacks(searchRunnable)
-        searchCall?.cancel()
         lastSearchQuery = null
         progressBar.visibility = View.GONE
         rvTracks.visibility = View.GONE
