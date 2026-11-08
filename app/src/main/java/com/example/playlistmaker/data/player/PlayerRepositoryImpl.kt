@@ -2,13 +2,20 @@ package com.example.playlistmaker.data.player
 
 import android.media.MediaPlayer
 import com.example.playlistmaker.domain.api.PlayerRepository
+import java.io.IOException
 
 class PlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer
 ) : PlayerRepository {
 
     override fun prepare(url: String, onPrepared: () -> Unit, onCompletion: () -> Unit) {
-        mediaPlayer.setDataSource(url)
+        try {
+            mediaPlayer.setDataSource(url)
+        } catch (e: IOException) {
+            return
+        } catch (e: IllegalArgumentException) {
+            return
+        }
         mediaPlayer.setOnPreparedListener { onPrepared() }
         mediaPlayer.setOnCompletionListener { onCompletion() }
         mediaPlayer.prepareAsync()

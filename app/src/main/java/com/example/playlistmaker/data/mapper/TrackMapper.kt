@@ -6,8 +6,8 @@ import com.example.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+private val timeFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 fun TrackDto.toTrack(): Track {
-    val timeFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
     return Track(
         trackId = trackId,
         trackName = trackName.orEmpty(),
