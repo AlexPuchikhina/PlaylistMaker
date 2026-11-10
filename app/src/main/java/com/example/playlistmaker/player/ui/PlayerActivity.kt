@@ -1,40 +1,26 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: PlayerViewModel
+
     private lateinit var btnPlay: ImageButton
     private lateinit var tvProgress: TextView
-
-    private val playerInteractor = Creator.providePlayerInteractor()
-
-    private val handler = Handler(Looper.getMainLooper())
-    private val timeFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
-    private val updateProgressRunnable = object : Runnable {
-        override fun run() {
-            if (playerInteractor.getPlayerState() == PlayerState.PLAYING) {
-                tvProgress.text = timeFormat.format(playerInteractor.getCurrentPosition())
-                handler.postDelayed(this, PROGRESS_UPDATE_DELAY_MS)
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,9 +33,27 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_player)
         val track = Gson().fromJson(trackJson, Track::class.java)
 
-        val btnBack = findViewById<ImageView>(R.id.btnBack)
-        btnBack.setOnClickListener { finish() }
+        viewModel = ViewModelProvider(
+            this,
+            PlayerViewModel.getFactory(track)
+        )[PlayerViewModel::class.java]
 
+        findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
+
+        btnPlay = findViewById(R.id.btnPlay)
+        tvProgress = findViewById(R.id.tvProgress)
+        btnPlay.setOnClickListener { viewModel.onPlayClicked() }
+
+        viewModel.observeTrack().observe(this) { showTrack(it) }
+        viewModel.observeState().observe(this) { render(it) }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.onPause()
+    }
+
+    private fun showTrack(track: Track) {
         val ivCover = findViewById<ImageView>(R.id.ivCover)
         val cornerRadiusPx = resources.getDimensionPixelSize(R.dimen.track_artwork_corner_radius)
         Glide.with(this)
@@ -63,69 +67,26 @@ class PlayerActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvArtistName).text = track.artistName
         findViewById<TextView>(R.id.tvDurationValue).text = track.trackTime
 
-        val rowAlbum = findViewById<View>(R.id.rowAlbum)
-        if (track.collectionName.isNullOrEmpty()) {
-            rowAlbum.visibility = View.GONE
-        } else {
-            findViewById<TextView>(R.id.tvAlbumValue).text = track.collectionName
-        }
+        findViewById<View>(R.id.rowAlbum).isVisible = !track.collectionName.isNullOrEmpty()
+        findViewById<TextView>(R.id.tvAlbumValue).text = track.collectionName
 
-        val rowYear = findViewById<View>(R.id.rowYear)
-        if (track.releaseDate.isNullOrEmpty()) {
-            rowYear.visibility = View.GONE
-        } else {
-            findViewById<TextView>(R.id.tvYearValue).text = track.releaseDate
-        }
+        findViewById<View>(R.id.rowYear).isVisible = !track.releaseDate.isNullOrEmpty()
+        findViewById<TextView>(R.id.tvYearValue).text = track.releaseDate
 
         findViewById<TextView>(R.id.tvGenreValue).text = track.primaryGenreName
         findViewById<TextView>(R.id.tvCountryValue).text = track.country
-
-        btnPlay = findViewById(R.id.btnPlay)
-        tvProgress = findViewById(R.id.tvProgress)
-        btnPlay.setOnClickListener { playerInteractor.playbackControl() }
-
-        render(PlayerState.DEFAULT)
-        val previewUrl = track.previewUrl
-        if (!previewUrl.isNullOrEmpty()) {
-            playerInteractor.preparePlayer(previewUrl) { state -> render(state) }
-        }
     }
 
-    override fun onPause() {
-        super.onPause()
-        playerInteractor.pause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacks(updateProgressRunnable)
-        playerInteractor.release()
-    }
-
-    private fun render(state: PlayerState) {
-        when (state) {
-            PlayerState.DEFAULT -> {
-                btnPlay.isEnabled = false
-            }
-            PlayerState.PREPARED -> {
-                btnPlay.isEnabled = true
-                btnPlay.setImageResource(R.drawable.ic_play_100x100)
-                handler.removeCallbacks(updateProgressRunnable)
-                tvProgress.text = getString(R.string.player_progress_default)
-            }
-            PlayerState.PLAYING -> {
-                btnPlay.setImageResource(R.drawable.ic_pause_100x100)
-                handler.post(updateProgressRunnable)
-            }
-            PlayerState.PAUSED -> {
-                btnPlay.setImageResource(R.drawable.ic_play_100x100)
-                handler.removeCallbacks(updateProgressRunnable)
-            }
-        }
+    private fun render(state: PlayerScreenState) {
+        btnPlay.isEnabled = state.playerState != PlayerState.DEFAULT
+        btnPlay.setImageResource(
+            if (state.playerState == PlayerState.PLAYING) R.drawable.ic_pause_100x100
+            else R.drawable.ic_play_100x100
+        )
+        tvProgress.text = state.progress
     }
 
     companion object {
         const val TRACK_KEY = "TRACK_KEY"
-        private const val PROGRESS_UPDATE_DELAY_MS = 300L
     }
 }
