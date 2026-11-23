@@ -7,7 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -17,7 +18,8 @@ import com.google.gson.Gson
 
 class PlayerActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: PlayerViewModel
+    private lateinit var track: Track
+    private val viewModel: PlayerViewModel by viewModel { parametersOf(track) }
 
     private lateinit var btnPlay: ImageButton
     private lateinit var tvProgress: TextView
@@ -31,12 +33,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_player)
-        val track = Gson().fromJson(trackJson, Track::class.java)
-
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.getFactory(track)
-        )[PlayerViewModel::class.java]
+        track = Gson().fromJson(trackJson, Track::class.java)
 
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
 
