@@ -15,6 +15,7 @@ import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
+import com.example.playlistmaker.search.data.network.ITunesApiService
 import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
@@ -22,6 +23,8 @@ import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import com.google.gson.Gson
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 object Creator {
 
@@ -39,7 +42,12 @@ object Creator {
     }
 
     private fun getTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient())
+        val iTunesService = Retrofit.Builder()
+            .baseUrl("https://itunes.apple.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ITunesApiService::class.java)
+        return TracksRepositoryImpl(RetrofitNetworkClient(iTunesService))
     }
 
     fun provideTracksInteractor(): TracksInteractor {
