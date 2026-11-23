@@ -25,6 +25,7 @@ import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import com.google.gson.Gson
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.Executors
 
 object Creator {
 
@@ -51,7 +52,8 @@ object Creator {
     }
 
     fun provideTracksInteractor(): TracksInteractor {
-        return TracksInteractorImpl(getTracksRepository())
+        return TracksInteractorImpl(getTracksRepository(),
+            Executors.newCachedThreadPool())
     }
 
     fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
