@@ -6,37 +6,34 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.IntentCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.search.domain.models.Track
-import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class PlayerActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: PlayerViewModel
+    private lateinit var track: Track
+    private val viewModel: PlayerViewModel by viewModel { parametersOf(track) }
 
     private lateinit var btnPlay: ImageButton
     private lateinit var tvProgress: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val trackJson = intent.getStringExtra(TRACK_KEY)
-        if (trackJson == null) {
+        val receivedTrack = IntentCompat.getSerializableExtra(intent, TRACK_KEY, Track::class.java)
+        if (receivedTrack == null) {
             finish()
             return
         }
+        track = receivedTrack
 
         setContentView(R.layout.activity_player)
-        val track = Gson().fromJson(trackJson, Track::class.java)
-
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.getFactory(track)
-        )[PlayerViewModel::class.java]
 
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
 
