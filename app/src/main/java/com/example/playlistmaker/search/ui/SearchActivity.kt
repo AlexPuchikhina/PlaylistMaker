@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.models.Track
-import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
@@ -156,7 +155,7 @@ class SearchActivity : AppCompatActivity() {
         viewModel.onTrackClicked(track)
 
         val intent = Intent(this, PlayerActivity::class.java)
-        intent.putExtra(PlayerActivity.TRACK_KEY, Gson().toJson(track))
+        intent.putExtra(PlayerActivity.TRACK_KEY, track)
         startActivity(intent)
     }
 

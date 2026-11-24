@@ -6,15 +6,15 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.IntentCompat
 import androidx.core.view.isVisible
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.search.domain.models.Track
-import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -26,14 +26,14 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val trackJson = intent.getStringExtra(TRACK_KEY)
-        if (trackJson == null) {
+        val receivedTrack = IntentCompat.getSerializableExtra(intent, TRACK_KEY, Track::class.java)
+        if (receivedTrack == null) {
             finish()
             return
         }
+        track = receivedTrack
 
         setContentView(R.layout.activity_player)
-        track = Gson().fromJson(trackJson, Track::class.java)
 
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
 

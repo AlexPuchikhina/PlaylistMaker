@@ -2,7 +2,6 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.di.dataModule
 import com.example.playlistmaker.di.interactorModule
 import com.example.playlistmaker.di.repositoryModule
@@ -22,7 +21,6 @@ class App : Application() {
             androidContext(this@App)
             modules(dataModule, repositoryModule, interactorModule, viewModelModule)
         }
-        Creator.init(this) // временно, уберём вместе с Creator
         switchTheme(settingsInteractor.isDarkThemeEnabled())
     }
 
